@@ -25,14 +25,14 @@ it("should flip cells correctly", function() {
     // mock Math.random
     jest.spyOn(Math, 'random')
         .mockReturnValueOnce(0.25)
-        .mockReturnValueOnce(0.75)
-        .mockReturnValueOnce(0.75)
         .mockReturnValueOnce(0.25)
         .mockReturnValueOnce(0.25)
         .mockReturnValueOnce(0.25)
         .mockReturnValueOnce(0.75)
         .mockReturnValueOnce(0.25)
-        .mockReturnValueOnce(0.75);
+        .mockReturnValueOnce(0.25)
+        .mockReturnValueOnce(0.25)
+        .mockReturnValueOnce(0.25);
         
     const { container } = render(<Board />);
     const MidLeftCell = container.querySelector('#cell-1-0');
@@ -41,7 +41,7 @@ it("should flip cells correctly", function() {
     
     // expect them to be what they should start as
     expect(MidLeftCell).toHaveClass("Cell-lit");
-    expect(LowerLeftCell).not.toHaveClass("Cell-lit");
+    expect(LowerLeftCell).toHaveClass("Cell-lit");
     expect(LowerMidCell).toHaveClass("Cell-Lit");
     
     // click
@@ -49,6 +49,6 @@ it("should flip cells correctly", function() {
     
     // expect them to have changed
     expect(MidLeftCell).not.toHaveClass("Cell-lit");
-    expect(LowerLeftCell).toHaveClass("Cell-lit");
+    expect(LowerLeftCell).not.toHaveClass("Cell-lit");
     expect(LowerMidCell).not.toHaveClass("Cell-Lit");
 });
