@@ -27,18 +27,28 @@ import "./Board.css";
  *
  **/
 
-function Board({ nrows, ncols, chanceLightStartsOn }) {
+function Board({ nrows=3, ncols=3, chanceLightStartsOn=0.5 }) {
   const [board, setBoard] = useState(createBoard());
 
   /** create a board nrows high/ncols wide, each cell randomly lit or unlit */
   function createBoard() {
+    // create array-of-arrays of true/false values
     let initialBoard = [];
-    // TODO: create array-of-arrays of true/false values
+    for (let i = 0; i < nrows; i++) {
+      const row = [];
+      for (let j = 0; j < ncols; j++) {
+        row.push(Math.random() < chanceLightStartsOn);
+      }
+      initialBoard.push(row);
+    }
     return initialBoard;
   }
 
   function hasWon() {
-    // TODO: check the board in state to determine whether the player has won.
+    // check the board in state to determine whether the player has won.
+    return board.every(row => {
+      return row.every((cell) => !cell)
+    })
   }
 
   function flipCellsAround(coord) {
@@ -53,21 +63,36 @@ function Board({ nrows, ncols, chanceLightStartsOn }) {
         }
       };
 
-      // TODO: Make a (deep) copy of the oldBoard
+      // Make a (deep) copy of the oldBoard
+      const newBoard = board.map(row => [...row])
 
-      // TODO: in the copy, flip this cell and the cells around it
+      // in the copy, flip this cell and the cells around it
+      flipCell (y, x,   newBoard);
+      flipCell (y+1, x, newBoard);
+      flipCell (y-1, x, newBoard);
+      flipCell (y, x+1, newBoard);
+      flipCell (y, x-1, newBoard);
 
-      // TODO: return the copy
+      // return the copy
+      return newBoard;
     });
   }
 
   // if the game is won, just show a winning msg & render nothing else
 
-  // TODO
+  if (hasWon()) {
+    return <h1 classname="board board-win-msg">You Won!</h1>
+  }
 
   // make table board
 
-  // TODO
+  return (<table classname="board board-table">
+    {board.map((row, rowIdx) => {return (<tr>
+      {row.map((cell, colIdx) => {return (<td>
+        <Cell flipCellsAroundMe={() => flipCellsAround(`${rowIdx}-${colIdx}`)} isLit={cell} />
+        </td>)})}
+    </tr>)})}
+  </table>)
 }
 
 export default Board;
